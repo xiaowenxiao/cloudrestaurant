@@ -7,7 +7,7 @@ import (
 )
 
 type Config struct {
-	AppNAme  string         `json:"app_name"`
+	AppName  string         `json:"app_name"`
 	AppMode  string         `json:"app_mode"`
 	AppHost  string         `json:"app_host"`
 	AppPort  string         `json:"app_port"`
