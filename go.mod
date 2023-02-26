@@ -6,9 +6,12 @@ require (
 	github.com/aliyun/alibaba-cloud-sdk-go v1.62.162
 	github.com/gin-gonic/gin v1.8.2
 	github.com/go-sql-driver/mysql v1.7.0
+	github.com/mojocn/base64Captcha v1.3.5
 )
 
 require (
+	github.com/golang/freetype v0.0.0-20170609003504-e2365dfdc4a0 // indirect
+	golang.org/x/image v0.0.0-20190501045829-6d32002ffd75 // indirect
 	gopkg.in/ini.v1 v1.66.2 // indirect
 	xorm.io/builder v0.3.6 // indirect
 	xorm.io/core v0.7.2-0.20190928055935-90aeac8d08eb // indirect
@@ -19,6 +22,7 @@ require (
 	github.com/go-playground/locales v0.14.0 // indirect
 	github.com/go-playground/universal-translator v0.18.0 // indirect
 	github.com/go-playground/validator/v10 v10.11.1 // indirect
+	github.com/go-redis/redis v6.15.9+incompatible
 	github.com/go-xorm/xorm v0.7.9
 	github.com/goccy/go-json v0.9.11 // indirect
 	github.com/jmespath/go-jmespath v0.0.0-20180206201540-c2b33e8439af // indirect

@@ -4,6 +4,7 @@ import (
 	"cloudrestaurant/param"
 	"cloudrestaurant/service"
 	"cloudrestaurant/tool"
+	"fmt"
 
 	"github.com/gin-gonic/gin"
 )
@@ -14,6 +15,30 @@ type MemberController struct {
 func (mc *MemberController) Router(engine *gin.Engine) {
 	engine.GET("/api/sendcode", mc.sendSmsCode)
 	engine.OPTIONS("/api/login", mc.smsLogin)
+	engine.GET("/api/captcha", mc.captcha)
+}
+
+// 生成验证码
+func (mc *MemberController) captcha(context *gin.Context) {
+	// todo 生成验证码，并返回客户端
+	tool.GenerateCaptcha(context)
+}
+
+// 判断验证码是否正确
+func (ms *MemberController) vertifyCaptcha(context *gin.Context) {
+	var captcha tool.CaptchaResult
+	err := tool.Decode(context.Request.Body, &captcha)
+	if err != nil {
+		tool.Failed(context, "参数解析失败")
+		return
+	}
+	result := tool.VertifyCaptcha(captcha.Id, captcha.VertifyValue)
+	if result {
+		fmt.Println("验证通过")
+	} else {
+		fmt.Println("验证失败")
+	}
+
 }
 
 func (mc *MemberController) sendSmsCode(context *gin.Context) {
