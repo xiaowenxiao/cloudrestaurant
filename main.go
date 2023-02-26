@@ -25,8 +25,8 @@ func main() {
 		return
 	}
 
-	// 初始化redis配置
-	tool.InitRedis()
+	// 设置redis
+	tool.RedisInit()
 
 	// 实例化app
 	app := gin.Default()

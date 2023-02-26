@@ -2,36 +2,28 @@ package tool
 
 import (
 	"fmt"
-	"log"
 	"time"
 
 	"github.com/go-redis/redis"
 )
 
-var (
-	RedisDb *redis.Client
-)
+const CAPTCHA = "captcha:"
 
-// 创建redis连接
-func InitRedis() {
+type RedisStore struct {
+}
+
+var RedisDb *redis.Client
+
+// 初始化redis配置
+func RedisInit() (err error) {
 	config := GetConfig().RedisConfig
 	RedisDb := redis.NewClient(&redis.Options{
 		Addr:     config.Addr + ":" + config.Port,
 		Password: config.Password,
 		DB:       config.Db,
 	})
-	_, err := RedisDb.Ping().Result()
-	if err != nil {
-		//连接失败
-		println(err)
-	}
-	log.Println("Redis连接成功")
-
-}
-
-const CAPTCHA = "captcha:"
-
-type RedisStore struct {
+	_, err = RedisDb.Ping().Result()
+	return err
 }
 
 //实现设置captcha的方法
@@ -42,12 +34,6 @@ func (r RedisStore) Set(id string, value string) error {
 		Password: config.Password,
 		DB:       config.Db,
 	})
-	_, erra := RedisDb.Ping().Result()
-	if erra != nil {
-		//连接失败
-		println(erra)
-	}
-	log.Println("Redis连接成功")
 	key := CAPTCHA + id
 	//time.Minute*2：有效时间2分钟
 	err := RedisDb.Set(key, value, time.Minute*2).Err()
@@ -57,6 +43,12 @@ func (r RedisStore) Set(id string, value string) error {
 
 //实现获取captcha的方法
 func (r RedisStore) Get(id string, clear bool) string {
+	config := GetConfig().RedisConfig
+	RedisDb := redis.NewClient(&redis.Options{
+		Addr:     config.Addr + ":" + config.Port,
+		Password: config.Password,
+		DB:       config.Db,
+	})
 
 	key := CAPTCHA + id
 	val, err := RedisDb.Get(key).Result()

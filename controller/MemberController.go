@@ -16,6 +16,8 @@ func (mc *MemberController) Router(engine *gin.Engine) {
 	engine.GET("/api/sendcode", mc.sendSmsCode)
 	engine.OPTIONS("/api/login", mc.smsLogin)
 	engine.GET("/api/captcha", mc.captcha)
+	//postman测试
+	engine.POST("/api/vertifycha", mc.vertifyCaptcha)
 }
 
 // 生成验证码
