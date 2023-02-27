@@ -17,7 +17,7 @@ var RedisDb *redis.Client
 // 初始化redis配置
 func RedisInit() (err error) {
 	config := GetConfig().RedisConfig
-	RedisDb := redis.NewClient(&redis.Options{
+	RedisDb = redis.NewClient(&redis.Options{
 		Addr:     config.Addr + ":" + config.Port,
 		Password: config.Password,
 		DB:       config.Db,
@@ -28,27 +28,15 @@ func RedisInit() (err error) {
 
 //实现设置captcha的方法
 func (r RedisStore) Set(id string, value string) error {
-	config := GetConfig().RedisConfig
-	RedisDb := redis.NewClient(&redis.Options{
-		Addr:     config.Addr + ":" + config.Port,
-		Password: config.Password,
-		DB:       config.Db,
-	})
 	key := CAPTCHA + id
 	//time.Minute*2：有效时间2分钟
-	err := RedisDb.Set(key, value, time.Minute*2).Err()
+	err := RedisDb.Set(key, value, time.Minute*5).Err()
 
 	return err
 }
 
 //实现获取captcha的方法
 func (r RedisStore) Get(id string, clear bool) string {
-	config := GetConfig().RedisConfig
-	RedisDb := redis.NewClient(&redis.Options{
-		Addr:     config.Addr + ":" + config.Port,
-		Password: config.Password,
-		DB:       config.Db,
-	})
 
 	key := CAPTCHA + id
 	val, err := RedisDb.Get(key).Result()
