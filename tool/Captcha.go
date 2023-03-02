@@ -12,7 +12,10 @@ type CaptchaResult struct {
 	Base64Blob   string                      `json:"base_64_blob"`
 }
 
+// 默认指定本地内存存储
 //var store = base64Captcha.DefaultMemStore
+
+// 指定redis存储验证码
 var store base64Captcha.Store = RedisStore{}
 
 //生成图形化验证码
