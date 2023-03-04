@@ -13,11 +13,43 @@ type MemberController struct {
 }
 
 func (mc *MemberController) Router(engine *gin.Engine) {
+	// 发送短信验证码，调用阿里云sdk发送
 	engine.GET("/api/sendcode", mc.sendSmsCode)
-	engine.OPTIONS("/api/login", mc.smsLogin)
+	// 手机号+短信验证码登录
+	engine.POST("/api/login_sms", mc.smsLogin)
+
+	// 生成base64Captcha验证码
 	engine.GET("/api/captcha", mc.captcha)
-	//postman测试
+	// 验证base64Captcha验证码 postman测试
 	engine.POST("/api/vertifycha", mc.vertifyCaptcha)
+	// 账号密码登录
+	engine.POST("/api/login_pwd", mc.nameLogin)
+}
+
+func (mc *MemberController) nameLogin(context *gin.Context) {
+	// 1、解析用户登录传递参数
+	var loginparam param.LoginParam
+	err := tool.Decode(context.Request.Body, &loginparam)
+	if err != nil {
+		tool.Failed(context, "参数解析失败")
+		return
+	}
+
+	// 2、验证验证码
+	validate := tool.VertifyCaptcha(loginparam.Id, loginparam.Value)
+	if !validate {
+		tool.Failed(context, "验证码不正确，请重新验证")
+		return
+	}
+
+	// 3、登录
+	ms := service.MemberService{}
+	member := ms.Login(loginparam.Name, loginparam.Password)
+	if member.Id != 0 {
+		tool.Success(context, &member)
+		return
+	}
+	tool.Failed(context, "登录失败")
 }
 
 // 生成验证码

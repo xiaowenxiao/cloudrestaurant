@@ -5,11 +5,26 @@ import (
 	"cloudrestaurant/tool"
 	"fmt"
 
+	"github.com/opentracing/opentracing-go/log"
 	"github.com/wonderivan/logger"
 )
 
 type MemberDao struct {
 	*tool.Orm
+}
+
+// 根据用户名和密码查询
+func (md *MemberDao) Query(name string, password string) *model.Member {
+	var member model.Member
+
+	password = tool.Base64Encode(password)
+
+	_, err := md.Where("user_name=? and password =?", name, password).Get(&member)
+	if err != nil {
+		log.Error(err)
+		return nil
+	}
+	return &member
 }
 
 // 验证手机号和验证码是否存在
