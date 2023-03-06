@@ -17,6 +17,15 @@ import (
 type MemberService struct {
 }
 
+func (ms *MemberService) UploadAvator(userId int64, fileName string) string {
+	memberDao := dao.MemberDao{Orm: tool.DbEngine}
+	result := memberDao.UploadMemberAvator(userId, fileName)
+	if result == 0 {
+		return ""
+	}
+	return fileName
+}
+
 // 用户登录
 func (ms *MemberService) Login(name string, password string) *model.Member {
 
